@@ -11,10 +11,10 @@ namespace CosmicCuration.Utilities
         private List<PooledItem<T>> pooledItems = new List<PooledItem<T>>();
         protected T GetItem()
         {
-            if(pooledItems.Count > 0)
+            if (pooledItems.Count > 0)
             {
                 PooledItem<T> item = pooledItems.Find(item => !item.isUsed);
-                if(item != null)
+                if (item != null)
                 {
                     item.isUsed = true;
                     return item.Item;
@@ -26,7 +26,7 @@ namespace CosmicCuration.Utilities
         private T CreateNewPooledItem()
         {
             PooledItem<T> newItem = new PooledItem<T>();
-            //newItem.Item = CreateEnemy();
+            newItem.Item = CreateItem();
             newItem.isUsed = true;
             pooledItems.Add(newItem);
             return newItem.Item;
@@ -35,11 +35,17 @@ namespace CosmicCuration.Utilities
         {
             throw new NotImplementedException("Child Class do not have implemented yet");
         }
-    }  public class PooledItem<T>
+
+        public void ReturnItem(T item)
+        {
+            PooledItem<T> pooledItem = pooledItems.Find(i => i.Item.Equals(item));
+            pooledItem.isUsed = false;
+        }
+        public class PooledItem<T>
         {
             public T Item;
             public bool isUsed;
         }
 
-        
+    }
 }
