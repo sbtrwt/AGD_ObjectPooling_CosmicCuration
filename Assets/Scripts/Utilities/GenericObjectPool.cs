@@ -11,7 +11,7 @@ namespace CosmicCuration.Utilities
     {
         public List<PooledItem<T>> pooledItems = new List<PooledItem<T>>();
 
-        public virtual T GetItem<U>() where U :T
+        public virtual T GetItem<U>() where U : T
         {
             if (pooledItems.Count > 0)
             {
@@ -22,7 +22,7 @@ namespace CosmicCuration.Utilities
                     return item.Item;
                 }
             }
-            return CreateNewPooledItem();
+            return CreateNewPooledItem<U>();
         }
 
         private T CreateNewPooledItem<U>() where U : T
@@ -34,7 +34,7 @@ namespace CosmicCuration.Utilities
             return newItem.Item;
         }
 
-        protected virtual T CreateItem<U>() where U :T
+        protected virtual T CreateItem<U>() where U : T
         {
             throw new NotImplementedException("CreateItem() method not implemented in derived class");
         }
@@ -42,7 +42,8 @@ namespace CosmicCuration.Utilities
         public virtual void ReturnItem(T item)
         {
             PooledItem<T> pooledItem = pooledItems.Find(i => i.Item.Equals(item));
-            pooledItem.isUsed = false;
+            if (pooledItem != null)
+                pooledItem.isUsed = false;
         }
 
         public class PooledItem<T>
